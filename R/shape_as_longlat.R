@@ -1,6 +1,10 @@
 shape_as_longlat <- function(file,
-                             enc = "ENCODING=WINDOWS-1252") {
-  # "ENCODING=UTF-8"
+                             enc = "ENCODING=WINDOWS-1252",
+                             force_utf = F){
+  if (force_utf == T) {
+    enc <- "ENCODING=UTF-8"
+  }
+  #
 
   file |>
     sf::st_read(options = enc) |>

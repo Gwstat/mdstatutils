@@ -4,7 +4,7 @@ kde_on_points <- function(griddata,
                           rel = TRUE)  {
   data |>
     sf::st_transform("+init=epsg:3857") |>
-    SpatialKDE::kde(band_width = 500,
+    SpatialKDE::kde(band_width = bandwidth,
                     grid = griddata |> sf::st_transform("+init=epsg:3857")) |>
     dplyr::pull(kde_value) |>
     (\(x) {
