@@ -28,6 +28,8 @@ left_join_expr <- function(data,
                         data2_expr,
                         use_cols = NULL) {
 
+  key_name <- enquo(key_name)
+
 
   join <- data2 |>
     dplyr::mutate(!!rlang::sym(key_name) := !!rlang::parse_expr(data2_expr))
