@@ -28,7 +28,7 @@ left_join_expr <- function(data,
                         data2_expr,
                         use_cols = NULL) {
 
-  key_name <- enquo(key_name)
+  key_name <- rlang::enquo(key_name)
 
 
   join <- data2 |>
