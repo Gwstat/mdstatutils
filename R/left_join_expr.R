@@ -29,13 +29,15 @@ left_join_expr <- function(data,
                         use_cols = NULL) {
 
 
-  join <- data2 |> dplyr::mutate(!!rlang::sym(key_name) := !!rlang::parse_expr(key_data2))
+  join <- data2 |>
+    dplyr::mutate(!!rlang::sym(key_name) := !!rlang::parse_expr(data2_expr))
+
   if (!is.null(use_cols)) {
     join <- join |>    dplyr::select(dplyr::all_of(use_cols), dplyr::all_of(key_name))
   }
 
 
   data |>
-    dplyr::mutate(!!rlang::sym(key_name) := !!rlang::parse_expr(key_data)) |>
+    dplyr::mutate(!!rlang::sym(key_name) := !!rlang::parse_expr(data2_expr)) |>
     dplyr::left_join(join, by = key_name) |>   dplyr::select(-!!key_name)
 }
