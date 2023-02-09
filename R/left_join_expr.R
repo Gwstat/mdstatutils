@@ -9,7 +9,7 @@
 #'
 #' @param data A data frame.
 #' @param data2 A second data frame.
-#' @param key_name A name for a interim key variable which is automatically removed afterwards. Is named "key" on default and should be changed if column "key" is already present in data or data2.
+#' @param key_name A name for a interim key variable which is automatically removed afterwards. Is named "by_key" by default and should be changed if this column name is already present in data or data2.
 #' @param data_expr A expression in a string containing the directions to produce the key variable in data.
 #' @param data2_expr A expression in a string containing the directions to produce the key variable in data2.
 #' @param use_cols A optional character vector. Specify the columns to extract in data2.
@@ -21,18 +21,17 @@
 #' @export
 #'
 #' @examples
-left_join_expr <- function(data,
-                        data2,
-                        key_name = "key",
+left_join_expr <- function(data = mtcars,
+                        data2 = data.frame(x=c(2,4,6), y=1:3),
+                        key_name = "by_key",
                         data_expr,
-                        data2_expr,
+                        data2_expr = "as.character(x)",
                         use_cols = NULL) {
 
-  key_name <- rlang::enquo(key_name)
 
 
   join <- data2 |>
-    dplyr::mutate(!!rlang::sym(key_name) := !!rlang::parse_expr(data2_expr))
+    dplyr::mutate(!!rlang::enquo(key_name) := !!rlang::parse_expr(data2_expr))
 
   if (!is.null(use_cols)) {
     join <- join |>    dplyr::select(dplyr::all_of(use_cols), dplyr::all_of(key_name))
