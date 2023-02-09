@@ -21,11 +21,11 @@
 #' @export
 #'
 #' @examples
-left_join_expr <- function(data = mtcars,
-                        data2 = data.frame(x=c(2,4,6), y=1:3),
+left_join_expr <- function(data,
+                        data2,
                         key_name = "by_key",
                         data_expr,
-                        data2_expr = "as.character(x)",
+                        data2_expr,
                         use_cols = NULL) {
 
 
@@ -39,6 +39,6 @@ left_join_expr <- function(data = mtcars,
 
 
   data |>
-    dplyr::mutate(!!rlang::sym(key_name) := !!rlang::parse_expr(data2_expr)) |>
+    dplyr::mutate(!!rlang::enquo(key_name) := !!rlang::parse_expr(data2_expr)) |>
     dplyr::left_join(join, by = key_name) |>   dplyr::select(-!!key_name)
 }
