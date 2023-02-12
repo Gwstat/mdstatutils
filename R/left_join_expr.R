@@ -39,6 +39,6 @@ left_join_expr <- function(data,
 
 
   data |>
-    dplyr::mutate(!!rlang::enquo(key_name) := !!rlang::parse_expr(data2_expr)) |>
+    dplyr::mutate(!!rlang::enquo(key_name) := !!rlang::parse_expr(data_expr)) |>
     dplyr::left_join(join, by = key_name) |>   dplyr::select(-!!key_name)
 }
