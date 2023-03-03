@@ -25,7 +25,7 @@ area2d_kde_on_point <- function(Points = Hausnummern |> sf::st_coordinates() |> 
   require(data.table)
   # assignInNamespace("cedta.pkgEvalsUserCode", c(data.table:::cedta.pkgEvalsUserCode,"rtvs"), "data.table")
 
-  # .datatable.aware = TRUE
+  # .datatable.aware = TRUE#
   # options(datatable.verbose=TRUE)
   # options(.datatable.aware = TRUE)
 
