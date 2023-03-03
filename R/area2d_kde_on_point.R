@@ -57,6 +57,8 @@ area2d_kde_on_point <- function(Points = Hausnummern |> sf::st_coordinates() |> 
     out <- out |> dplyr::mutate(name = Pointnames)
   }
 
+  return(out)
+
 
 
 }
