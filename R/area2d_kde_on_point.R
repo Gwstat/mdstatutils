@@ -7,6 +7,8 @@ area2d_kde_on_point <- function(Points = Hausnummern |> sf::st_coordinates() |> 
                                 samples = 10,
                                 gridsize = 100) {
 
+  require(data.table)
+
   kdes <- area2d_kde(polygons = polygons,
                      col = col,
                      burnin = burnin,
