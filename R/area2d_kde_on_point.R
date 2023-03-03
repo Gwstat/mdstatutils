@@ -21,10 +21,10 @@ area2d_kde_on_point <- function(Points = Hausnummern |> sf::st_coordinates() |> 
   dt1 <-data.table::data.table(Points)
   dt2 <- data.table::data.table(as.data.frame(kdes[,1:2]))
 
-  out <- dt1[, nearest_dt2 := apply(raster::pointDistance(as.matrix(dt1),
+  out <- data.table::data.table(dt1[, nearest_dt2 := apply(raster::pointDistance(as.matrix(dt1),
                                                           as.matrix(dt2),
                                                           lonlat = FALSE), 1,
-                                    which.min)][] |>
+                                    which.min)][]) |>
     tibble::as.tibble() |>
     (\(x) {
 
