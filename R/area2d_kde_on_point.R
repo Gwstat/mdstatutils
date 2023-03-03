@@ -1,4 +1,19 @@
 
+#' Title
+#'
+#' @param Points
+#' @param Pointnames
+#' @param polygons
+#' @param col
+#' @param burnin
+#' @param samples
+#' @param gridsize
+#'
+#' @return
+#' @import data.table
+#' @export
+#'
+#' @examples
 area2d_kde_on_point <- function(Points = Hausnummern |> sf::st_coordinates() |> as.matrix(),
                                 Pointnames = Hausnummern |> dplyr::pull(Adresse),
                                 polygons = STT,
@@ -8,6 +23,11 @@ area2d_kde_on_point <- function(Points = Hausnummern |> sf::st_coordinates() |> 
                                 gridsize = 100) {
 
   require(data.table)
+  # assignInNamespace("cedta.pkgEvalsUserCode", c(data.table:::cedta.pkgEvalsUserCode,"rtvs"), "data.table")
+
+  # .datatable.aware = TRUE
+  # options(datatable.verbose=TRUE)
+  # options(.datatable.aware = TRUE)
 
   kdes <- area2d_kde(polygons = polygons,
                      col = col,
@@ -25,7 +45,7 @@ area2d_kde_on_point <- function(Points = Hausnummern |> sf::st_coordinates() |> 
                                                           as.matrix(dt2),
                                                           lonlat = FALSE), 1,
                                     which.min)][]) |>
-    tibble::as.tibble() |>
+    tibble::as_tibble() |>
     (\(x) {
 
       density <- kdes[x$nearest_dt2,3]
