@@ -22,12 +22,6 @@ area2d_kde_on_point <- function(Points = Hausnummern |> sf::st_coordinates() |> 
                                 samples = 10,
                                 gridsize = 100) {
 
-  require(data.table)
-  # assignInNamespace("cedta.pkgEvalsUserCode", c(data.table:::cedta.pkgEvalsUserCode,"rtvs"), "data.table")
-
-  # .datatable.aware = TRUE#
-  # options(datatable.verbose=TRUE)
-  # options(.datatable.aware = TRUE)
 
   kdes <- area2d_kde(polygons = polygons,
                      col = col,
@@ -40,12 +34,17 @@ area2d_kde_on_point <- function(Points = Hausnummern |> sf::st_coordinates() |> 
 
   dt1 <-data.table::data.table(Points)
   dt2 <- data.table::data.table(as.data.frame(kdes[,1:2]))
+  out <- dt1
+  out$nearest_dt2 <- apply(raster::pointDistance(as.matrix(dt1),
+                                                 as.matrix(dt2),
+                                                 lonlat = FALSE), 1,
+                           which.min)
 
-  out <- data.table::data.table(dt1[, {nearest_dt2 := apply(raster::pointDistance(as.matrix(dt1),
-                                                          as.matrix(dt2),
-                                                          lonlat = FALSE), 1,
-                                    which.min)}][]) |>
-    tibble::as_tibble() |>
+  # out <- data.table::data.table(dt1[, {nearest_dt2 := apply(raster::pointDistance(as.matrix(dt1),
+  #                                                         as.matrix(dt2),
+  #                                                         lonlat = FALSE), 1,
+  #                                   which.min)}][]) |>
+  out <- out |> tibble::as_tibble() |>
     (\(x) {
 
       density <- kdes[x$nearest_dt2,3]
