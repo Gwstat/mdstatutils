@@ -14,14 +14,13 @@
 #' @export
 #'
 #' @examples
-area2d_kde_on_point <- function(Points = Hausnummern |> sf::st_coordinates() |> as.matrix(),
+area2d_kde_on_point <- function(Points = Hausnummern,
                                 Pointnames = Hausnummern |> dplyr::pull(Adresse),
                                 polygons = STT,
                                 col = "Straßenkriminalität",
                                 burnin = 5,
                                 samples = 10,
                                 gridsize = 100) {
-
 
   kdes <- area2d_kde(polygons = polygons,
                      col = col,
@@ -31,26 +30,13 @@ area2d_kde_on_point <- function(Points = Hausnummern |> sf::st_coordinates() |> 
                      spatial_object = FALSE)
 
 
-
-  dt1 <-data.table::data.table(Points)
-  dt2 <- data.table::data.table(as.data.frame(kdes[,1:2]))
-  out <- dt1
-  out$nearest_dt2 <- apply(raster::pointDistance(as.matrix(dt1),
-                                                 as.matrix(dt2),
-                                                 lonlat = FALSE), 1,
-                           which.min)
-
-  # out <- data.table::data.table(dt1[, {nearest_dt2 := apply(raster::pointDistance(as.matrix(dt1),
-  #                                                         as.matrix(dt2),
-  #                                                         lonlat = FALSE), 1,
-  #                                   which.min)}][]) |>
-  out <- out |> tibble::as_tibble() |>
+  dt1 <- Points |> sf::st_coordinates() |> as.matrix()
+  dt2 <- as.data.frame(kdes[,1:2])
+  out <- dt1 |>
+    cbind(RANN::nn2(dt2, dt1, k = 1) |> sapply(cbind) ) |> tibble::as_tibble() |>
     (\(x) {
-
-      density <- kdes[x$nearest_dt2,3]
-
+      density <- kdes[x$nn.idx,3]
       x |>  dplyr::mutate(dens = density)
-
     })()
 
   if (!is.null(Pointnames)) {
@@ -58,7 +44,5 @@ area2d_kde_on_point <- function(Points = Hausnummern |> sf::st_coordinates() |> 
   }
 
   return(out)
-
-
 
 }
