@@ -10,7 +10,7 @@ area_prop_on_point <- function(Points,
       x$area <- sf::st_area(x)
       x
     })() |>
-    sf::st_drop_geometry(df)
+    sf::st_drop_geometry()
 
 
 }
